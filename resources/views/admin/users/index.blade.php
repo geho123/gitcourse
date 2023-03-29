@@ -6,12 +6,14 @@
     <thead>
       <tr>
         <th>Id</th>
+        <th>Photo</th>
         <th>Name</th>
         <th>Email</th>
         <th>Role</th>
         <th>Status</th>
         <th>Created</th>
         <th>Updated</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -19,12 +21,29 @@
             @foreach($users as $user)
       <tr>
         <td>{{$user->id}}</td>
-        <td>{{$user->name}}</td>
+        <td><img src="{{$user->photo ? $user->photo->file : 'http://placehold.it/50x50'}}" alt="" height="50"></td>
+        <td><a href="{{route('admin.users.edit', $user->id)}}"> {{$user->name}}</a></td>
         <td>{{$user->email}}</td>
         <td>{{$user->role->name}}</td>
         <td>{{$user->is_active == 1? 'Active' : 'Not Active'}}</td>
         <td>{{$user->created_at->diffForHumans()}}</td>
-        <td>{{$user->updated_at->diffForHumans()}}</td> 
+        <td>{{$user->updated_at->diffForHumans()}}</td>
+        <td>
+          <a href="{{route('admin.users.edit', $user->id)}}">
+          <div class="form-group">
+            {!! Form::submit('Update User', ['class'=>'btn btn-primary']) !!}
+          </div>
+          </a>
+        </td>
+
+        <td>
+          {!! Form::open(['method' => 'DELETE', 'action' => ['AdminUsersController@destroy', $user->id]]) !!}
+          {{csrf_field()}}
+          <div class="form-group">
+            {!! Form::submit('Delete User', ['class'=>'btn btn-danger']) !!}
+            {!! Form::close() !!}
+          </div>
+        </td>
       </tr>
       @endforeach
       @endif
